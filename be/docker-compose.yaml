@@ -18,7 +18,7 @@ services:
         condition: service_healthy
     volumes:
       - .:/src/app
-    command: air -C .air.toml          
+    command: air -c .air.toml          
 
   db:
     image: postgres:alpine
@@ -29,14 +29,14 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
-      - 5432:5432
+      - 5430:5432
     volumes:
       - postgres-db:/var/lib/postgresql/data
     networks:
       - application
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]  
-      intervals: 10s
+      interval: 10s
       timeout: 5s
       retries: 5
 

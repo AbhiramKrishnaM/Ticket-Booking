@@ -26,9 +26,9 @@ func AuthProtected(db *gorm.DB) fiber.Handler {
 			})
 		}
 
-		tokenParts := strings.Split(authHeader, "")
+		tokenParts := strings.Split(authHeader, " ")
 
-		if len(tokenParts) != 2 || tokenParts[0] != "Bearer " {
+		if len(tokenParts) != 2 || tokenParts[0] != "Bearer" {
 			log.Warnf("invalid authorization header")
 
 			return ctx.Status(fiber.StatusUnauthorized).JSON(&fiber.Map{

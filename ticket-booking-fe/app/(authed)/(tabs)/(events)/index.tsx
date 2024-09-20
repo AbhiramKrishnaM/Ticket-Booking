@@ -5,6 +5,7 @@ import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import Text from "@/components/Text";
 import VStack from "@/components/VStack";
 import { useAuth } from "@/context/AuthContext";
+import { useOnScreenListener } from "@/hooks/useOnScreenListener";
 import { eventService } from "@/services/event";
 import { Event } from "@/types/event";
 import { UserRole } from "@/types/user";
@@ -44,9 +45,9 @@ const EventScreen = () => {
     }
   }, []);
 
-  useEffect(() => {
-    fetchEvents();
+  useOnScreenListener("focus", fetchEvents);
 
+  useEffect(() => {
     navigation.setOptions({
       headerTitle: "Events",
       headerRight: user?.role === UserRole.Manager ? headerRight : null,

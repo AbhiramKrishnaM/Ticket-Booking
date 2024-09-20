@@ -8,18 +8,27 @@ import { useAuth } from "@/context/AuthContext";
 import { eventService } from "@/services/event";
 import { Event } from "@/types/event";
 import { UserRole } from "@/types/user";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Alert, FlatList, TouchableOpacity } from "react-native";
 
 const EventScreen = () => {
   const { user } = useAuth();
+  const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const [events, setEvents] = useState<Event[]>([]);
 
   function onGoToEventPage(id) {
     if (user?.role === UserRole.Manager) {
       router.push(`/(events)/event/${id}`);
+    }
+  }
+
+  function buyTicket(id: string) {
+    try {
+      Alert.alert("Success", "Ticket purchased successfully");
+    } catch (error) {
+      Alert.alert("Error", "Failed to buy ticket");
     }
   }
 
@@ -37,7 +46,12 @@ const EventScreen = () => {
 
   useEffect(() => {
     fetchEvents();
-  }, [fetchEvents]);
+
+    navigation.setOptions({
+      headerTitle: "Events",
+      headerRight: user?.role === UserRole.Manager ? headerRight : null,
+    });
+  }, [fetchEvents, navigation]);
 
   return;
   <VStack flex={1} p={20} pb={0} gap={20}>
@@ -95,16 +109,30 @@ const EventScreen = () => {
               <Button
                 variant="outlined"
                 disabled={isLoading}
-                onPress={() => {}}
+                onPress={() => buyTicket(event.id)}
               >
                 Buy Ticket
               </Button>
             </VStack>
           )}
+
+          <Text fontSize={16} color="gray">
+            {event.date}
+          </Text>
         </VStack>
       )}
     />
   </VStack>;
+};
+
+const headerRight = () => {
+  return (
+    <TabBarIcon
+      size={32}
+      name="add-circle-outline"
+      onPress={() => router.push("/(events)/new")}
+    />
+  );
 };
 
 export default EventScreen;

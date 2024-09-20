@@ -1,4 +1,5 @@
 import Button from "@/components/Button";
+import DateTimePicker from "@/components/DateTimePicker";
 import Input from "@/components/Input";
 import Text from "@/components/Text";
 import VStack from "@/components/VStack";
@@ -13,6 +14,10 @@ const NewEvent = () => {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [date, setDate] = useState(new Date());
+
+  function onChangeDate(date?: Date) {
+    setDate(date || new Date());
+  }
 
   async function onSubmit() {
     try {
@@ -66,6 +71,7 @@ const NewEvent = () => {
         <Text ml={10} fontSize={14} color="gray">
           Date
         </Text>
+        <DateTimePicker onChange={onChangeDate} currentDate={date} />
       </VStack>
 
       <Button

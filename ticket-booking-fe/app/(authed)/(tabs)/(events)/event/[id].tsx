@@ -4,9 +4,9 @@ import Input from "@/components/Input";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import Text from "@/components/Text";
 import VStack from "@/components/VStack";
-import { useOnScreenListener } from "@/hooks/useOnScreenListener";
 import { eventService } from "@/services/event";
 import { Event } from "@/types/event";
+import { useFocusEffect } from "@react-navigation/native";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Alert } from "react-native";
@@ -38,14 +38,14 @@ const EventDetailScreen = () => {
     }
   }
 
-  const fetchEvent = useCallback(async () => {
+  const fetchEvent = async () => {
     try {
       const response = await eventService.getOne(Number(id));
       setEventData(response.data);
     } catch (error) {
       router.back();
     }
-  }, [id, router]);
+  };
 
   const onDelete = useCallback(() => {
     if (!eventData) return;
@@ -74,7 +74,11 @@ const EventDetailScreen = () => {
     setEventData((prev) => ({ ...prev!, [field]: value }));
   }
 
-  useOnScreenListener("focus", fetchEvent);
+  useFocusEffect(
+    useCallback(() => {
+      fetchEvent();
+    }, [])
+  );
 
   useEffect(() => {
     navigation.setOptions({

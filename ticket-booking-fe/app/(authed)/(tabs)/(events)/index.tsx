@@ -5,10 +5,10 @@ import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import Text from "@/components/Text";
 import VStack from "@/components/VStack";
 import { useAuth } from "@/context/AuthContext";
-import { useOnScreenListener } from "@/hooks/useOnScreenListener";
 import { eventService } from "@/services/event";
 import { Event } from "@/types/event";
 import { UserRole } from "@/types/user";
+import { useFocusEffect } from "@react-navigation/native";
 import { router, useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Alert, FlatList, TouchableOpacity } from "react-native";
@@ -33,7 +33,7 @@ const EventScreen = () => {
     }
   }
 
-  const fetchEvents = useCallback(async () => {
+  const fetchEvents = async () => {
     try {
       setIsLoading(true);
       const response = await eventService.getAll();
@@ -43,16 +43,20 @@ const EventScreen = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  };
 
-  useOnScreenListener("focus", fetchEvents);
+  useFocusEffect(
+    useCallback(() => {
+      fetchEvents();
+    }, [])
+  );
 
   useEffect(() => {
     navigation.setOptions({
       headerTitle: "Events",
       headerRight: user?.role === UserRole.Manager ? headerRight : null,
     });
-  }, [fetchEvents, navigation]);
+  }, [navigation, user]);
 
   return;
   <VStack flex={1} p={20} pb={0} gap={20}>

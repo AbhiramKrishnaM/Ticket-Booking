@@ -61,6 +61,7 @@ export function AuthenticationProvider({ children }: PropsWithChildren) {
         const { data } = response;
         const { user, token } = response;
 
+        setIsLoggedIn(true);
         await AsyncStorage.setItem("token", token);
         await AsyncStorage.setItem("user", JSON.stringify(user));
 

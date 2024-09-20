@@ -1,10 +1,11 @@
 import { View, Text } from "react-native";
 import React from "react";
 import { Redirect, Stack } from "expo-router";
+import { useAuth } from "@/context/AuthContext";
 
 const AppLayout = () => {
   // check if the user is logged in
-  const isLoggedIn = false;
+  const { isLoggedIn } = useAuth();
 
   if (!isLoggedIn) {
     return <Redirect href="/login" />;

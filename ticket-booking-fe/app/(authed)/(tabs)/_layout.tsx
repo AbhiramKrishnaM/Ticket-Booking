@@ -3,11 +3,15 @@ import React, { ComponentProps } from "react";
 import { Tabs } from "expo-router";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Ionicons } from "@expo/vector-icons";
+import { UserRole } from "@/types/user";
+import { useAuth } from "@/context/AuthContext";
 
 const TabLayout = () => {
+  const { user } = useAuth();
+
   const tabs = [
     {
-      showFor: [],
+      showFor: [UserRole.Manager, UserRole.Attendee],
       name: "(events)",
       displayName: "Events",
       icon: "calendar",
@@ -16,7 +20,7 @@ const TabLayout = () => {
       },
     },
     {
-      showFor: [],
+      showFor: [UserRole.Attendee],
       name: "(tickets)",
       displayName: "My Tickets",
       icon: "ticket",
@@ -25,7 +29,7 @@ const TabLayout = () => {
       },
     },
     {
-      showFor: [],
+      showFor: [UserRole.Manager],
       name: "scan-ticket",
       displayName: "Scan Ticket",
       icon: "scan",
@@ -34,7 +38,7 @@ const TabLayout = () => {
       },
     },
     {
-      showFor: [],
+      showFor: [UserRole.Attendee, UserRole.Manager],
       name: "settings",
       displayName: "Settings",
       icon: "cog",
@@ -53,7 +57,7 @@ const TabLayout = () => {
           options={{
             ...tab.options,
             headerTitle: tab.displayName,
-            // href: tab.showFor.includes()
+            href: tab.showFor.includes(user?.role!) ? tab.name : null,
             tabBarLabel: ({ focused }) => (
               <Text style={{ color: focused ? "black" : "gray", fontSize: 12 }}>
                 {tab.displayName}
